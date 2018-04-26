@@ -1,11 +1,16 @@
-# Learning GDB Basics
+---
+layout: post
+title:  "Learning GDB"
+date:   2018-01-08 13:11:05 2018 -0500
+categories: tools
+---
 
 I'm starting to learn C after primarily working in Ruby and one intimidating things about C so far is the lack of visibility into programs. The ability in Ruby to run code directly from a REPL — and in the middle of your program with `binding.pry` — gives me confidence that I understand how a program is behaving. So far coding in C feels more like working on a black box, but I'm hoping learning GDB will help with that.
 
 Inspired by Julia Evans, I thought it would be useful to document what I've learned so far in the form of a blog post. I had trouble finding a good resource that gave a basic overview of GDB and its capabilities, so I want to try to do that here. Two resources that did help a lot were [this post by Julia Evans](https://jvns.ca/blog/2014/02/10/three-steps-to-learning-gdb/), and [this part of the GDB docs](https://sourceware.org/gdb/current/onlinedocs/gdb/Sample-Session.html). Using the `help` command from within `gdb` was also useful to learn more about the commands it supports. I have only just started using GDB so definitely let me know if there are any mistakes or if I am misunderstanding anything!
 
 Here's the program we're going to walk through running `gdb` on:
-```
+```c
 #include <stdio.h>
 
 int add(int a, int b) { return (a + b); }
@@ -21,7 +26,7 @@ int main(int argc, char **argv) { hello_world(); }
 ## Compile your program with symbols
 
 The first step is to compile your program for GDB using the `-g` flag:
-```
+```sh
 gcc -g src/main.c -o bin/main
 ```
 
@@ -127,8 +132,8 @@ I haven't worked with assembly before so this isn't very helpful to me right now
 ```
 The `/s` part specifies the format to display the data in — here I used `s` for a string.
 
-## Quit
+## Quiting
 
-I often have trouble figuring out or remembering how to quit command line applications — CTRL+D or `quit` works for gdb.
+I often have trouble figuring out or remembering the incantation to quit a command line application — is it `quit()`, `exit;`, or `:q`? CTRL+D or `quit` works for gdb.
 
 I haven't used `gdb` to debug something I'm actually working on yet, but these are the things that seem like they will be most useful.

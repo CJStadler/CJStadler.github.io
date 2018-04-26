@@ -1,6 +1,9 @@
-# What I learned from a group project
-
-4/26/18
+---
+layout: post
+title:  "What I learned from a group project"
+date:   2018-04-26 12:28:50 -0400
+categories: teams
+---
 
 In one of my courses this semester the second half was mostly focused on a group project. I was excited about this because I had been missing the collaboration that I had in my job before going back to school — in particular the opportunity to discuss code with other people and to learn from them. I didn't know my two teammates very well, but from my interactions with them in class they seemed intelligent and competent so I was happy with our group. Working together proved to be much more challenging than I had anticipated though, and it taught me an important thing about teamwork: don't make assumptions about your teammates.
 
