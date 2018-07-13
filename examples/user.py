@@ -24,7 +24,7 @@ class User:
       'signed_up_at': self.signed_up_at.timestamp()
     }
 
-    json_string = json.dumps(json_dict)
+    json_string = json.dumps(json_dict, ensure_ascii=False) # Shhhh
     encoded_bytes = json_string.encode('utf-8')
 
     return encoded_bytes
