@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "Git deleted my file!?"
+title:  "Git may delete ignored files"
 date:   2018-04-26 12:28:50 -0400
 categories: tools
 ---
 
-I was working on a rails project recently and got an error that my local database configuration file could not be found. This was surprising because I had been running the app earlier in the day without issue, and I hadn't been working on anything that I expected to touch the config file. I didn't immediately believe the error message so I checked the filesystem but it was definitely not there. The file was pretty minimal, but I didn't want to reconstruct it if I didn't need to. I checked in "Trash" but the file wasn't there, and I couldn't restore it with git because it is ignored.
+I was working on a Rails project recently and got an error that my local database configuration file could not be found. This was surprising because I had been running the app earlier in the day without issue, and I hadn't been working on anything that I expected to touch the config file. I didn't immediately believe the error message so I checked the filesystem but it was definitely not there. The file was pretty minimal, but I didn't want to reconstruct it if I didn't need to. I checked in "Trash" but the file wasn't there, and I couldn't restore it with git because it is ignored.
 
 The file being ignored by git gave me a clue though, and I started forming a hypothesis.
 
