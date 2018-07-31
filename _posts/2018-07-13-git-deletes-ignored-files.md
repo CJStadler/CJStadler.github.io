@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Git may delete ignored files"
-date:   2018-04-26 12:28:50 -0400
+date:   2018-07-13 12:28:50 -0400
 categories: tools
 ---
 
