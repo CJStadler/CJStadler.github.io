@@ -5,6 +5,7 @@ date:   2018-08-02 17:00:00 -0400
 categories: cryptopals rust
 ---
 The challenge: [https://cryptopals.com/sets/1/challenges/7](https://cryptopals.com/sets/1/challenges/7)
+My solution: [https://github.com/CJStadler/cryptopals-rust/commit/32e4762](https://github.com/CJStadler/cryptopals-rust/commit/32e4762)
 
 This was a very short challenge but I managed to have some difficulty with it
 so maybe it's still worth writing a blog. The instructions say
