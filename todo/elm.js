@@ -6404,6 +6404,22 @@ var author$project$Component$EntryList$viewControls = F3(
 					A3(elm$html$Html$Lazy$lazy2, author$project$Component$EntryList$viewControlsClear, deleteComplete, entriesCompleted)
 				]));
 	});
+var elm$core$Basics$compare = _Utils_compare;
+var author$project$Component$EntryList$compareEntries = F2(
+	function (a, b) {
+		var toInt = function (e) {
+			var _n0 = author$project$Entry$completed(e);
+			if (_n0) {
+				return 1;
+			} else {
+				return 0;
+			}
+		};
+		return A2(
+			elm$core$Basics$compare,
+			toInt(a),
+			toInt(b));
+	});
 var author$project$Component$EntryList$EditingEntry = function (a) {
 	return {$: 'EditingEntry', a: a};
 };
@@ -6600,6 +6616,7 @@ var elm$core$List$all = F2(
 			A2(elm$core$Basics$composeL, elm$core$Basics$not, isOkay),
 			list);
 	});
+var elm$core$List$sortWith = _List_sortWith;
 var elm$html$Html$section = _VirtualDom_node('section');
 var elm$html$Html$Attributes$for = elm$html$Html$Attributes$stringProperty('htmlFor');
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
@@ -6624,7 +6641,10 @@ var author$project$Component$EntryList$viewEntries = F3(
 					return true;
 			}
 		};
-		var visibleEntries = A2(elm$core$List$filter, isVisible, entries);
+		var visibleEntries = A2(
+			elm$core$List$sortWith,
+			author$project$Component$EntryList$compareEntries,
+			A2(elm$core$List$filter, isVisible, entries));
 		var editingEntry = function (entry) {
 			var _n1 = r.editingId;
 			if (_n1.$ === 'Just') {
@@ -6705,7 +6725,6 @@ var author$project$Component$EntryList$view = F3(
 					A4(elm$html$Html$Lazy$lazy3, author$project$Component$EntryList$viewControls, config.deleteComplete, r.visibility, entries)
 				]));
 	});
-var elm$core$Basics$compare = _Utils_compare;
 var justinmimbs$date$Date$compare = F2(
 	function (_n0, _n1) {
 		var a = _n0.a;
