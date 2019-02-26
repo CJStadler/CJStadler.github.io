@@ -6204,16 +6204,16 @@ var author$project$Main$infoFooter = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					elm$html$Html$text('Written by '),
+					elm$html$Html$text('Get the '),
 					A2(
 					elm$html$Html$a,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$href('https://github.com/evancz')
+							elm$html$Html$Attributes$href('https://github.com/CJStadler/todo')
 						]),
 					_List_fromArray(
 						[
-							elm$html$Html$text('Evan Czaplicki')
+							elm$html$Html$text('code')
 						]))
 				])),
 			A2(
@@ -6221,31 +6221,22 @@ var author$project$Main$infoFooter = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					elm$html$Html$text('Part of '),
+					elm$html$Html$text('Based on '),
 					A2(
 					elm$html$Html$a,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$href('http://todomvc.com')
+							elm$html$Html$Attributes$href('https://github.com/evancz/elm-todomvc')
 						]),
 					_List_fromArray(
 						[
-							elm$html$Html$text('TodoMVC')
+							elm$html$Html$text('Elm TodoMVC')
 						]))
 				]))
 		]));
-var author$project$Component$EntryList$External = function (a) {
-	return {$: 'External', a: a};
-};
-var elm$html$Html$button = _VirtualDom_node('button');
-var elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$bool(bool));
-	});
-var elm$html$Html$Attributes$hidden = elm$html$Html$Attributes$boolProperty('hidden');
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$int = _Json_decodeInt;
+var elm$html$Html$Events$keyCode = A2(elm$json$Json$Decode$field, 'keyCode', elm$json$Json$Decode$int);
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -6257,176 +6248,6 @@ var elm$html$Html$Events$on = F2(
 			event,
 			elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
-var author$project$Component$EntryList$viewControlsClear = F2(
-	function (deleteComplete, entriesCompleted) {
-		return A2(
-			elm$html$Html$button,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('clear-completed'),
-					elm$html$Html$Attributes$hidden(!entriesCompleted),
-					elm$html$Html$Events$onClick(
-					author$project$Component$EntryList$External(deleteComplete))
-				]),
-			_List_fromArray(
-				[
-					elm$html$Html$text(
-					'Clear completed (' + (elm$core$String$fromInt(entriesCompleted) + ')'))
-				]));
-	});
-var elm$html$Html$span = _VirtualDom_node('span');
-var elm$html$Html$strong = _VirtualDom_node('strong');
-var author$project$Component$EntryList$viewControlsCount = function (entriesLeft) {
-	var item_ = (entriesLeft === 1) ? ' item' : ' items';
-	return A2(
-		elm$html$Html$span,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('todo-count')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$strong,
-				_List_Nil,
-				_List_fromArray(
-					[
-						elm$html$Html$text(
-						elm$core$String$fromInt(entriesLeft))
-					])),
-				elm$html$Html$text(item_ + ' left')
-			]));
-};
-var author$project$Component$EntryList$ChangeVisibility = function (a) {
-	return {$: 'ChangeVisibility', a: a};
-};
-var author$project$Component$EntryList$Internal = function (a) {
-	return {$: 'Internal', a: a};
-};
-var elm$html$Html$li = _VirtualDom_node('li');
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
-};
-var elm$html$Html$Attributes$classList = function (classes) {
-	return elm$html$Html$Attributes$class(
-		A2(
-			elm$core$String$join,
-			' ',
-			A2(
-				elm$core$List$map,
-				elm$core$Tuple$first,
-				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
-};
-var author$project$Component$EntryList$visibilitySwap = F3(
-	function (uri, visibility, actualVisibility) {
-		return A2(
-			elm$html$Html$li,
-			_List_fromArray(
-				[
-					elm$html$Html$Events$onClick(
-					author$project$Component$EntryList$Internal(
-						author$project$Component$EntryList$ChangeVisibility(visibility)))
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$a,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$href(uri),
-							elm$html$Html$Attributes$classList(
-							_List_fromArray(
-								[
-									_Utils_Tuple2(
-									'selected',
-									_Utils_eq(visibility, actualVisibility))
-								]))
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text(
-							author$project$Component$EntryList$visibilityToString(visibility))
-						]))
-				]));
-	});
-var elm$html$Html$ul = _VirtualDom_node('ul');
-var author$project$Component$EntryList$viewControlsFilters = function (visibility) {
-	return A2(
-		elm$html$Html$ul,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('filters')
-			]),
-		_List_fromArray(
-			[
-				A3(author$project$Component$EntryList$visibilitySwap, '#/', author$project$Component$EntryList$All, visibility),
-				elm$html$Html$text(' '),
-				A3(author$project$Component$EntryList$visibilitySwap, '#/active', author$project$Component$EntryList$Active, visibility),
-				elm$html$Html$text(' '),
-				A3(author$project$Component$EntryList$visibilitySwap, '#/completed', author$project$Component$EntryList$Completed, visibility)
-			]));
-};
-var elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var elm$virtual_dom$VirtualDom$lazy = _VirtualDom_lazy;
-var elm$html$Html$Lazy$lazy = elm$virtual_dom$VirtualDom$lazy;
-var elm$virtual_dom$VirtualDom$lazy2 = _VirtualDom_lazy2;
-var elm$html$Html$Lazy$lazy2 = elm$virtual_dom$VirtualDom$lazy2;
-var author$project$Component$EntryList$viewControls = F3(
-	function (deleteComplete, visibility, entries) {
-		var entriesCompleted = elm$core$List$length(
-			A2(elm$core$List$filter, author$project$Entry$completed, entries));
-		var entriesLeft = elm$core$List$length(entries) - entriesCompleted;
-		return A2(
-			elm$html$Html$footer,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('footer'),
-					elm$html$Html$Attributes$hidden(
-					elm$core$List$isEmpty(entries))
-				]),
-			_List_fromArray(
-				[
-					A2(elm$html$Html$Lazy$lazy, author$project$Component$EntryList$viewControlsCount, entriesLeft),
-					A2(elm$html$Html$Lazy$lazy, author$project$Component$EntryList$viewControlsFilters, visibility),
-					A3(elm$html$Html$Lazy$lazy2, author$project$Component$EntryList$viewControlsClear, deleteComplete, entriesCompleted)
-				]));
-	});
-var elm$core$Basics$compare = _Utils_compare;
-var author$project$Component$EntryList$compareEntries = F2(
-	function (a, b) {
-		var toInt = function (e) {
-			var _n0 = author$project$Entry$completed(e);
-			if (_n0) {
-				return 1;
-			} else {
-				return 0;
-			}
-		};
-		return A2(
-			elm$core$Basics$compare,
-			toInt(a),
-			toInt(b));
-	});
-var author$project$Component$EntryList$EditingEntry = function (a) {
-	return {$: 'EditingEntry', a: a};
-};
-var author$project$Component$EntryList$FinishEdit = {$: 'FinishEdit'};
-var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$int = _Json_decodeInt;
-var elm$html$Html$Events$keyCode = A2(elm$json$Json$Decode$field, 'keyCode', elm$json$Json$Decode$int);
 var elm$json$Json$Decode$andThen = _Json_andThen;
 var elm$json$Json$Decode$fail = _Json_fail;
 var author$project$Helpers$onEnter = function (msg) {
@@ -6438,26 +6259,22 @@ var author$project$Helpers$onEnter = function (msg) {
 		'keydown',
 		A2(elm$json$Json$Decode$andThen, isEnter, elm$html$Html$Events$keyCode));
 };
-var elm$html$Html$div = _VirtualDom_node('div');
+var author$project$Main$Add = {$: 'Add'};
+var author$project$Main$UpdateField = function (a) {
+	return {$: 'UpdateField', a: a};
+};
 var elm$html$Html$input = _VirtualDom_node('input');
-var elm$html$Html$label = _VirtualDom_node('label');
-var elm$html$Html$Attributes$checked = elm$html$Html$Attributes$boolProperty('checked');
-var elm$html$Html$Attributes$id = elm$html$Html$Attributes$stringProperty('id');
+var elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$bool(bool));
+	});
+var elm$html$Html$Attributes$autofocus = elm$html$Html$Attributes$boolProperty('autofocus');
 var elm$html$Html$Attributes$name = elm$html$Html$Attributes$stringProperty('name');
-var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
+var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
-var elm$html$Html$Events$onBlur = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'blur',
-		elm$json$Json$Decode$succeed(msg));
-};
-var elm$html$Html$Events$onDoubleClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'dblclick',
-		elm$json$Json$Decode$succeed(msg));
-};
 var elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -6490,311 +6307,34 @@ var elm$html$Html$Events$onInput = function (tagger) {
 			elm$html$Html$Events$alwaysStop,
 			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
 };
-var author$project$Component$EntryList$viewEntry = F3(
-	function (config, editing, entry) {
-		var entryId = author$project$Entry$id(entry);
-		return A2(
-			elm$html$Html$li,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$classList(
-					_List_fromArray(
-						[
-							_Utils_Tuple2(
-							'completed',
-							author$project$Entry$completed(entry)),
-							_Utils_Tuple2('editing', editing)
-						]))
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('view')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							elm$html$Html$input,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$class('toggle'),
-									elm$html$Html$Attributes$type_('checkbox'),
-									elm$html$Html$Attributes$checked(
-									author$project$Entry$completed(entry)),
-									elm$html$Html$Events$onClick(
-									author$project$Component$EntryList$External(
-										A2(
-											config.check,
-											entryId,
-											!author$project$Entry$completed(entry))))
-								]),
-							_List_Nil),
-							A2(
-							elm$html$Html$label,
-							_List_fromArray(
-								[
-									elm$html$Html$Events$onDoubleClick(
-									author$project$Component$EntryList$Internal(
-										author$project$Component$EntryList$EditingEntry(entryId)))
-								]),
-							_List_fromArray(
-								[
-									elm$html$Html$text(
-									author$project$Entry$description(entry))
-								])),
-							A2(
-							elm$html$Html$button,
-							_List_fromArray(
-								[
-									elm$html$Html$Attributes$class('destroy'),
-									elm$html$Html$Events$onClick(
-									author$project$Component$EntryList$External(
-										config._delete(entryId)))
-								]),
-							_List_Nil)
-						])),
-					A2(
-					elm$html$Html$input,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('edit'),
-							elm$html$Html$Attributes$value(
-							author$project$Entry$description(entry)),
-							elm$html$Html$Attributes$name('title'),
-							elm$html$Html$Attributes$id(
-							'todo-' + elm$core$String$fromInt(entryId)),
-							elm$html$Html$Events$onInput(
-							A2(
-								elm$core$Basics$composeL,
-								author$project$Component$EntryList$External,
-								config.updateEntry(entryId))),
-							elm$html$Html$Events$onBlur(
-							author$project$Component$EntryList$Internal(author$project$Component$EntryList$FinishEdit)),
-							author$project$Helpers$onEnter(
-							author$project$Component$EntryList$Internal(author$project$Component$EntryList$FinishEdit))
-						]),
-					_List_Nil)
-				]));
-	});
-var elm$virtual_dom$VirtualDom$lazy3 = _VirtualDom_lazy3;
-var elm$html$Html$Lazy$lazy3 = elm$virtual_dom$VirtualDom$lazy3;
-var author$project$Component$EntryList$viewKeyedEntry = F3(
-	function (config, editing, entry) {
-		return _Utils_Tuple2(
-			elm$core$String$fromInt(
-				author$project$Entry$id(entry)),
-			A4(elm$html$Html$Lazy$lazy3, author$project$Component$EntryList$viewEntry, config, editing, entry));
-	});
-var elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
-var elm$core$List$all = F2(
-	function (isOkay, list) {
-		return !A2(
-			elm$core$List$any,
-			A2(elm$core$Basics$composeL, elm$core$Basics$not, isOkay),
-			list);
-	});
-var elm$core$List$sortWith = _List_sortWith;
-var elm$html$Html$section = _VirtualDom_node('section');
-var elm$html$Html$Attributes$for = elm$html$Html$Attributes$stringProperty('htmlFor');
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
-	return _VirtualDom_keyedNode(
-		_VirtualDom_noScript(tag));
+var author$project$Main$newEntryInput = function (inputVal) {
+	return A2(
+		elm$html$Html$input,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('new-todo'),
+				elm$html$Html$Attributes$placeholder('What needs to be done?'),
+				elm$html$Html$Attributes$autofocus(true),
+				elm$html$Html$Attributes$value(inputVal),
+				elm$html$Html$Attributes$name('newTodo'),
+				elm$html$Html$Events$onInput(author$project$Main$UpdateField),
+				author$project$Helpers$onEnter(author$project$Main$Add)
+			]),
+		_List_Nil);
 };
-var elm$html$Html$Keyed$node = elm$virtual_dom$VirtualDom$keyedNode;
-var elm$html$Html$Keyed$ul = elm$html$Html$Keyed$node('ul');
-var author$project$Component$EntryList$viewEntries = F3(
-	function (config, _n0, entries) {
-		var r = _n0.a;
-		var isVisible = function (todo) {
-			var _n2 = r.visibility;
-			switch (_n2.$) {
-				case 'Completed':
-					return author$project$Entry$completed(todo);
-				case 'Active':
-					return !author$project$Entry$completed(todo);
-				default:
-					return true;
-			}
-		};
-		var visibleEntries = A2(
-			elm$core$List$sortWith,
-			author$project$Component$EntryList$compareEntries,
-			A2(elm$core$List$filter, isVisible, entries));
-		var editingEntry = function (entry) {
-			var _n1 = r.editingId;
-			if (_n1.$ === 'Just') {
-				var id = _n1.a;
-				return _Utils_eq(
-					id,
-					author$project$Entry$id(entry));
-			} else {
-				return false;
-			}
-		};
-		var cssVisibility = elm$core$List$isEmpty(entries) ? 'hidden' : 'visible';
-		var allCompleted = A2(elm$core$List$all, author$project$Entry$completed, entries);
-		return A2(
-			elm$html$Html$section,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('main'),
-					A2(elm$html$Html$Attributes$style, 'visibility', cssVisibility)
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$input,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('toggle-all'),
-							elm$html$Html$Attributes$type_('checkbox'),
-							elm$html$Html$Attributes$name('toggle'),
-							elm$html$Html$Attributes$checked(allCompleted),
-							elm$html$Html$Events$onClick(
-							author$project$Component$EntryList$External(
-								config.checkAll(!allCompleted)))
-						]),
-					_List_Nil),
-					A2(
-					elm$html$Html$label,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$for('toggle-all')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text('Mark all as complete')
-						])),
-					A2(
-					elm$html$Html$Keyed$ul,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('todo-list')
-						]),
-					A2(
-						elm$core$List$map,
-						function (e) {
-							return A3(
-								author$project$Component$EntryList$viewKeyedEntry,
-								config,
-								editingEntry(e),
-								e);
-						},
-						visibleEntries))
-				]));
-	});
-var author$project$Component$EntryList$view = F3(
-	function (config, _n0, entries) {
-		var r = _n0.a;
-		return A2(
-			elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A4(
-					elm$html$Html$Lazy$lazy3,
-					author$project$Component$EntryList$viewEntries,
-					config,
-					author$project$Component$EntryList$Model(r),
-					entries),
-					A4(elm$html$Html$Lazy$lazy3, author$project$Component$EntryList$viewControls, config.deleteComplete, r.visibility, entries)
-				]));
-	});
-var justinmimbs$date$Date$compare = F2(
-	function (_n0, _n1) {
-		var a = _n0.a;
-		var b = _n1.a;
-		return A2(elm$core$Basics$compare, a, b);
-	});
-var author$project$Entry$onDate = F2(
-	function (d, entry) {
-		return _Utils_eq(
-			A2(
-				justinmimbs$date$Date$compare,
-				d,
-				author$project$Entry$date(entry)),
-			elm$core$Basics$EQ);
-	});
-var author$project$Main$CheckAll = F2(
-	function (a, b) {
-		return {$: 'CheckAll', a: a, b: b};
-	});
-var author$project$Main$CheckEntry = F2(
-	function (a, b) {
-		return {$: 'CheckEntry', a: a, b: b};
-	});
-var author$project$Main$DeleteComplete = function (a) {
-	return {$: 'DeleteComplete', a: a};
-};
-var author$project$Main$DeleteEntry = function (a) {
-	return {$: 'DeleteEntry', a: a};
-};
-var author$project$Main$UpdateEntry = F2(
-	function (a, b) {
-		return {$: 'UpdateEntry', a: a, b: b};
-	});
-var elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
-var elm$html$Html$map = elm$virtual_dom$VirtualDom$map;
-var author$project$Main$viewEntryList = function (model) {
-	var toMsg = function (msg) {
-		if (msg.$ === 'External') {
-			var m = msg.a;
-			return m;
-		} else {
-			var m = msg.a;
-			return author$project$Main$EntryListMsg(m);
-		}
-	};
-	var entries = A2(
-		elm$core$List$filter,
-		author$project$Entry$onDate(model.activeDate),
-		model.entries);
-	var config = {
-		check: author$project$Main$CheckEntry,
-		checkAll: author$project$Main$CheckAll(model.activeDate),
-		_delete: author$project$Main$DeleteEntry,
-		deleteComplete: author$project$Main$DeleteComplete(model.activeDate),
-		updateEntry: author$project$Main$UpdateEntry
-	};
-	var html = A3(author$project$Component$EntryList$view, config, model.listState, entries);
-	return A2(elm$html$Html$map, toMsg, html);
-};
-var author$project$Main$Add = {$: 'Add'};
 var author$project$Main$SetDate = function (a) {
 	return {$: 'SetDate', a: a};
 };
-var author$project$Main$UpdateField = function (a) {
-	return {$: 'UpdateField', a: a};
-};
+var elm$html$Html$button = _VirtualDom_node('button');
+var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$h1 = _VirtualDom_node('h1');
-var elm$html$Html$header = _VirtualDom_node('header');
-var elm$html$Html$Attributes$autofocus = elm$html$Html$Attributes$boolProperty('autofocus');
-var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
+var elm$html$Html$Attributes$id = elm$html$Html$Attributes$stringProperty('id');
+var elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'click',
+		elm$json$Json$Decode$succeed(msg));
+};
 var elm$core$String$cons = _String_cons;
 var elm$core$String$fromChar = function (_char) {
 	return A2(elm$core$String$cons, _char, '');
@@ -7826,69 +7366,543 @@ var justinmimbs$date$Date$language_en = {
 var justinmimbs$date$Date$format = function (pattern) {
 	return A2(justinmimbs$date$Date$formatWithLanguage, justinmimbs$date$Date$language_en, pattern);
 };
-var author$project$Main$viewHeader = F2(
-	function (activeDate, todoStr) {
-		var previousDay = author$project$Main$SetDate(
-			A3(justinmimbs$date$Date$add, justinmimbs$date$Date$Days, -1, activeDate));
-		var nextDay = author$project$Main$SetDate(
-			A3(justinmimbs$date$Date$add, justinmimbs$date$Date$Days, 1, activeDate));
-		var dateString = A2(justinmimbs$date$Date$format, 'MMM ddd, y', activeDate);
+var author$project$Main$viewDate = function (activeDate) {
+	var previousDay = author$project$Main$SetDate(
+		A3(justinmimbs$date$Date$add, justinmimbs$date$Date$Days, -1, activeDate));
+	var nextDay = author$project$Main$SetDate(
+		A3(justinmimbs$date$Date$add, justinmimbs$date$Date$Days, 1, activeDate));
+	var dateString = A2(justinmimbs$date$Date$format, 'MMM ddd, y', activeDate);
+	return A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$id('date-display')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$id('date-header')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$h1,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text(dateString)
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$id('date-buttons')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$id('prev-day'),
+								elm$html$Html$Events$onClick(previousDay)
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('❮')
+							])),
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$id('next-day'),
+								elm$html$Html$Events$onClick(nextDay)
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('❯')
+							]))
+					]))
+			]));
+};
+var author$project$Component$EntryList$External = function (a) {
+	return {$: 'External', a: a};
+};
+var elm$html$Html$Attributes$hidden = elm$html$Html$Attributes$boolProperty('hidden');
+var author$project$Component$EntryList$viewControlsClear = F2(
+	function (deleteComplete, entriesCompleted) {
 		return A2(
-			elm$html$Html$header,
+			elm$html$Html$button,
 			_List_fromArray(
 				[
-					elm$html$Html$Attributes$class('header')
+					elm$html$Html$Attributes$class('clear-completed'),
+					elm$html$Html$Attributes$hidden(!entriesCompleted),
+					elm$html$Html$Events$onClick(
+					author$project$Component$EntryList$External(deleteComplete))
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text(
+					'Clear completed (' + (elm$core$String$fromInt(entriesCompleted) + ')'))
+				]));
+	});
+var elm$html$Html$span = _VirtualDom_node('span');
+var elm$html$Html$strong = _VirtualDom_node('strong');
+var author$project$Component$EntryList$viewControlsCount = function (entriesLeft) {
+	var item_ = (entriesLeft === 1) ? ' item' : ' items';
+	return A2(
+		elm$html$Html$span,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('todo-count')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$strong,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						elm$core$String$fromInt(entriesLeft))
+					])),
+				elm$html$Html$text(item_ + ' left')
+			]));
+};
+var author$project$Component$EntryList$ChangeVisibility = function (a) {
+	return {$: 'ChangeVisibility', a: a};
+};
+var author$project$Component$EntryList$Internal = function (a) {
+	return {$: 'Internal', a: a};
+};
+var elm$html$Html$li = _VirtualDom_node('li');
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
+var elm$html$Html$Attributes$classList = function (classes) {
+	return elm$html$Html$Attributes$class(
+		A2(
+			elm$core$String$join,
+			' ',
+			A2(
+				elm$core$List$map,
+				elm$core$Tuple$first,
+				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
+};
+var author$project$Component$EntryList$visibilitySwap = F3(
+	function (uri, visibility, actualVisibility) {
+		return A2(
+			elm$html$Html$li,
+			_List_fromArray(
+				[
+					elm$html$Html$Events$onClick(
+					author$project$Component$EntryList$Internal(
+						author$project$Component$EntryList$ChangeVisibility(visibility)))
 				]),
 			_List_fromArray(
 				[
 					A2(
-					elm$html$Html$h1,
-					_List_Nil,
+					elm$html$Html$a,
 					_List_fromArray(
 						[
-							elm$html$Html$text(dateString)
-						])),
+							elm$html$Html$Attributes$href(uri),
+							elm$html$Html$Attributes$classList(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'selected',
+									_Utils_eq(visibility, actualVisibility))
+								]))
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(
+							author$project$Component$EntryList$visibilityToString(visibility))
+						]))
+				]));
+	});
+var elm$html$Html$ul = _VirtualDom_node('ul');
+var author$project$Component$EntryList$viewControlsFilters = function (visibility) {
+	return A2(
+		elm$html$Html$ul,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('filters')
+			]),
+		_List_fromArray(
+			[
+				A3(author$project$Component$EntryList$visibilitySwap, '#/', author$project$Component$EntryList$All, visibility),
+				elm$html$Html$text(' '),
+				A3(author$project$Component$EntryList$visibilitySwap, '#/active', author$project$Component$EntryList$Active, visibility),
+				elm$html$Html$text(' '),
+				A3(author$project$Component$EntryList$visibilitySwap, '#/completed', author$project$Component$EntryList$Completed, visibility)
+			]));
+};
+var elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var elm$virtual_dom$VirtualDom$lazy = _VirtualDom_lazy;
+var elm$html$Html$Lazy$lazy = elm$virtual_dom$VirtualDom$lazy;
+var elm$virtual_dom$VirtualDom$lazy2 = _VirtualDom_lazy2;
+var elm$html$Html$Lazy$lazy2 = elm$virtual_dom$VirtualDom$lazy2;
+var author$project$Component$EntryList$viewControls = F3(
+	function (deleteComplete, visibility, entries) {
+		var entriesCompleted = elm$core$List$length(
+			A2(elm$core$List$filter, author$project$Entry$completed, entries));
+		var entriesLeft = elm$core$List$length(entries) - entriesCompleted;
+		return A2(
+			elm$html$Html$footer,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('footer'),
+					elm$html$Html$Attributes$hidden(
+					elm$core$List$isEmpty(entries))
+				]),
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Lazy$lazy, author$project$Component$EntryList$viewControlsCount, entriesLeft),
+					A2(elm$html$Html$Lazy$lazy, author$project$Component$EntryList$viewControlsFilters, visibility),
+					A3(elm$html$Html$Lazy$lazy2, author$project$Component$EntryList$viewControlsClear, deleteComplete, entriesCompleted)
+				]));
+	});
+var elm$core$Basics$compare = _Utils_compare;
+var author$project$Component$EntryList$compareEntries = F2(
+	function (a, b) {
+		var toInt = function (e) {
+			var _n0 = author$project$Entry$completed(e);
+			if (_n0) {
+				return 1;
+			} else {
+				return 0;
+			}
+		};
+		return A2(
+			elm$core$Basics$compare,
+			toInt(a),
+			toInt(b));
+	});
+var author$project$Component$EntryList$EditingEntry = function (a) {
+	return {$: 'EditingEntry', a: a};
+};
+var author$project$Component$EntryList$FinishEdit = {$: 'FinishEdit'};
+var elm$html$Html$label = _VirtualDom_node('label');
+var elm$html$Html$Attributes$checked = elm$html$Html$Attributes$boolProperty('checked');
+var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
+var elm$html$Html$Events$onBlur = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'blur',
+		elm$json$Json$Decode$succeed(msg));
+};
+var elm$html$Html$Events$onDoubleClick = function (msg) {
+	return A2(
+		elm$html$Html$Events$on,
+		'dblclick',
+		elm$json$Json$Decode$succeed(msg));
+};
+var author$project$Component$EntryList$viewEntry = F3(
+	function (config, editing, entry) {
+		var entryId = author$project$Entry$id(entry);
+		return A2(
+			elm$html$Html$li,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$classList(
+					_List_fromArray(
+						[
+							_Utils_Tuple2(
+							'completed',
+							author$project$Entry$completed(entry)),
+							_Utils_Tuple2('editing', editing)
+						]))
+				]),
+			_List_fromArray(
+				[
 					A2(
 					elm$html$Html$div,
-					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('view-entry')
+						]),
 					_List_fromArray(
 						[
 							A2(
-							elm$html$Html$button,
+							elm$html$Html$input,
 							_List_fromArray(
 								[
-									elm$html$Html$Events$onClick(previousDay)
+									elm$html$Html$Attributes$class('toggle'),
+									elm$html$Html$Attributes$type_('checkbox'),
+									elm$html$Html$Attributes$checked(
+									author$project$Entry$completed(entry)),
+									elm$html$Html$Events$onClick(
+									author$project$Component$EntryList$External(
+										A2(
+											config.check,
+											entryId,
+											!author$project$Entry$completed(entry))))
+								]),
+							_List_Nil),
+							A2(
+							elm$html$Html$label,
+							_List_fromArray(
+								[
+									elm$html$Html$Events$onDoubleClick(
+									author$project$Component$EntryList$Internal(
+										author$project$Component$EntryList$EditingEntry(entryId)))
 								]),
 							_List_fromArray(
 								[
-									elm$html$Html$text('Previous')
+									elm$html$Html$text(
+									author$project$Entry$description(entry))
 								])),
 							A2(
 							elm$html$Html$button,
 							_List_fromArray(
 								[
-									elm$html$Html$Events$onClick(nextDay)
+									elm$html$Html$Attributes$class('destroy'),
+									elm$html$Html$Events$onClick(
+									author$project$Component$EntryList$External(
+										config._delete(entryId)))
 								]),
-							_List_fromArray(
-								[
-									elm$html$Html$text('Next')
-								]))
+							_List_Nil)
 						])),
 					A2(
 					elm$html$Html$input,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$class('new-todo'),
-							elm$html$Html$Attributes$placeholder('What needs to be done?'),
-							elm$html$Html$Attributes$autofocus(true),
-							elm$html$Html$Attributes$value(todoStr),
-							elm$html$Html$Attributes$name('newTodo'),
-							elm$html$Html$Events$onInput(author$project$Main$UpdateField),
-							author$project$Helpers$onEnter(author$project$Main$Add)
+							elm$html$Html$Attributes$class('edit'),
+							elm$html$Html$Attributes$value(
+							author$project$Entry$description(entry)),
+							elm$html$Html$Attributes$name('title'),
+							elm$html$Html$Attributes$id(
+							'todo-' + elm$core$String$fromInt(entryId)),
+							elm$html$Html$Events$onInput(
+							A2(
+								elm$core$Basics$composeL,
+								author$project$Component$EntryList$External,
+								config.updateEntry(entryId))),
+							elm$html$Html$Events$onBlur(
+							author$project$Component$EntryList$Internal(author$project$Component$EntryList$FinishEdit)),
+							author$project$Helpers$onEnter(
+							author$project$Component$EntryList$Internal(author$project$Component$EntryList$FinishEdit))
 						]),
 					_List_Nil)
 				]));
 	});
+var elm$virtual_dom$VirtualDom$lazy3 = _VirtualDom_lazy3;
+var elm$html$Html$Lazy$lazy3 = elm$virtual_dom$VirtualDom$lazy3;
+var author$project$Component$EntryList$viewKeyedEntry = F3(
+	function (config, editing, entry) {
+		return _Utils_Tuple2(
+			elm$core$String$fromInt(
+				author$project$Entry$id(entry)),
+			A4(elm$html$Html$Lazy$lazy3, author$project$Component$EntryList$viewEntry, config, editing, entry));
+	});
+var elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			elm$core$List$any,
+			A2(elm$core$Basics$composeL, elm$core$Basics$not, isOkay),
+			list);
+	});
+var elm$core$List$sortWith = _List_sortWith;
+var elm$html$Html$section = _VirtualDom_node('section');
+var elm$html$Html$Attributes$for = elm$html$Html$Attributes$stringProperty('htmlFor');
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
+	return _VirtualDom_keyedNode(
+		_VirtualDom_noScript(tag));
+};
+var elm$html$Html$Keyed$node = elm$virtual_dom$VirtualDom$keyedNode;
+var elm$html$Html$Keyed$ul = elm$html$Html$Keyed$node('ul');
+var author$project$Component$EntryList$viewEntries = F3(
+	function (config, _n0, entries) {
+		var r = _n0.a;
+		var isVisible = function (todo) {
+			var _n2 = r.visibility;
+			switch (_n2.$) {
+				case 'Completed':
+					return author$project$Entry$completed(todo);
+				case 'Active':
+					return !author$project$Entry$completed(todo);
+				default:
+					return true;
+			}
+		};
+		var visibleEntries = A2(
+			elm$core$List$sortWith,
+			author$project$Component$EntryList$compareEntries,
+			A2(elm$core$List$filter, isVisible, entries));
+		var editingEntry = function (entry) {
+			var _n1 = r.editingId;
+			if (_n1.$ === 'Just') {
+				var id = _n1.a;
+				return _Utils_eq(
+					id,
+					author$project$Entry$id(entry));
+			} else {
+				return false;
+			}
+		};
+		var cssVisibility = elm$core$List$isEmpty(entries) ? 'hidden' : 'visible';
+		var allCompleted = A2(elm$core$List$all, author$project$Entry$completed, entries);
+		return A2(
+			elm$html$Html$section,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('main'),
+					A2(elm$html$Html$Attributes$style, 'visibility', cssVisibility)
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$input,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('toggle-all'),
+							elm$html$Html$Attributes$type_('checkbox'),
+							elm$html$Html$Attributes$name('toggle'),
+							elm$html$Html$Attributes$checked(allCompleted),
+							elm$html$Html$Events$onClick(
+							author$project$Component$EntryList$External(
+								config.checkAll(!allCompleted)))
+						]),
+					_List_Nil),
+					A2(
+					elm$html$Html$label,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$for('toggle-all')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('Mark all as complete')
+						])),
+					A2(
+					elm$html$Html$Keyed$ul,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('todo-list')
+						]),
+					A2(
+						elm$core$List$map,
+						function (e) {
+							return A3(
+								author$project$Component$EntryList$viewKeyedEntry,
+								config,
+								editingEntry(e),
+								e);
+						},
+						visibleEntries))
+				]));
+	});
+var author$project$Component$EntryList$view = F3(
+	function (config, _n0, entries) {
+		var r = _n0.a;
+		return A2(
+			elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A4(
+					elm$html$Html$Lazy$lazy3,
+					author$project$Component$EntryList$viewEntries,
+					config,
+					author$project$Component$EntryList$Model(r),
+					entries),
+					A4(elm$html$Html$Lazy$lazy3, author$project$Component$EntryList$viewControls, config.deleteComplete, r.visibility, entries)
+				]));
+	});
+var justinmimbs$date$Date$compare = F2(
+	function (_n0, _n1) {
+		var a = _n0.a;
+		var b = _n1.a;
+		return A2(elm$core$Basics$compare, a, b);
+	});
+var author$project$Entry$onDate = F2(
+	function (d, entry) {
+		return _Utils_eq(
+			A2(
+				justinmimbs$date$Date$compare,
+				d,
+				author$project$Entry$date(entry)),
+			elm$core$Basics$EQ);
+	});
+var author$project$Main$CheckAll = F2(
+	function (a, b) {
+		return {$: 'CheckAll', a: a, b: b};
+	});
+var author$project$Main$CheckEntry = F2(
+	function (a, b) {
+		return {$: 'CheckEntry', a: a, b: b};
+	});
+var author$project$Main$DeleteComplete = function (a) {
+	return {$: 'DeleteComplete', a: a};
+};
+var author$project$Main$DeleteEntry = function (a) {
+	return {$: 'DeleteEntry', a: a};
+};
+var author$project$Main$UpdateEntry = F2(
+	function (a, b) {
+		return {$: 'UpdateEntry', a: a, b: b};
+	});
+var elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
+var elm$html$Html$map = elm$virtual_dom$VirtualDom$map;
+var author$project$Main$viewEntryList = function (model) {
+	var toMsg = function (msg) {
+		if (msg.$ === 'External') {
+			var m = msg.a;
+			return m;
+		} else {
+			var m = msg.a;
+			return author$project$Main$EntryListMsg(m);
+		}
+	};
+	var entries = A2(
+		elm$core$List$filter,
+		author$project$Entry$onDate(model.activeDate),
+		model.entries);
+	var config = {
+		check: author$project$Main$CheckEntry,
+		checkAll: author$project$Main$CheckAll(model.activeDate),
+		_delete: author$project$Main$DeleteEntry,
+		deleteComplete: author$project$Main$DeleteComplete(model.activeDate),
+		updateEntry: author$project$Main$UpdateEntry
+	};
+	var html = A3(author$project$Component$EntryList$view, config, model.listState, entries);
+	return A2(elm$html$Html$map, toMsg, html);
+};
 var author$project$ImportEntries$filter = F3(
 	function (from, to, entries) {
 		return A2(
@@ -7934,7 +7948,13 @@ var author$project$Main$viewImportPrompt = F3(
 						elm$html$Html$text('no')
 					]))
 			]);
-		return A2(elm$html$Html$div, _List_Nil, contents);
+		return A2(
+			elm$html$Html$div,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('panel')
+				]),
+			contents);
 	});
 var author$project$Main$view = function (model) {
 	var importPrompt = function () {
@@ -7950,8 +7970,7 @@ var author$project$Main$view = function (model) {
 		elm$html$Html$div,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$class('todomvc-wrapper'),
-				A2(elm$html$Html$Attributes$style, 'visibility', 'hidden')
+				elm$html$Html$Attributes$class('todomvc-wrapper')
 			]),
 		_List_fromArray(
 			[
@@ -7963,9 +7982,19 @@ var author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
+						A2(elm$html$Html$Lazy$lazy, author$project$Main$viewDate, model.activeDate),
 						importPrompt,
-						A3(elm$html$Html$Lazy$lazy2, author$project$Main$viewHeader, model.activeDate, model.field),
-						A2(elm$html$Html$Lazy$lazy, author$project$Main$viewEntryList, model)
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('panel')
+							]),
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Lazy$lazy, author$project$Main$newEntryInput, model.field),
+								A2(elm$html$Html$Lazy$lazy, author$project$Main$viewEntryList, model)
+							]))
 					])),
 				author$project$Main$infoFooter
 			]));
@@ -7990,7 +8019,7 @@ var author$project$Main$main = elm$browser$Browser$document(
 					[
 						author$project$Main$view(model)
 					]),
-				title: 'Elm • TodoMVC'
+				title: 'TODO'
 			};
 		}
 	});
