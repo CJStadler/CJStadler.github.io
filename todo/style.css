@@ -108,6 +108,27 @@ input[type="checkbox"] {
     background-color: rgba(175, 47, 47, 0.20);
 }
 
+#import-prompt {
+  text-align: center;
+  padding: 5px;
+  color: #777;
+}
+
+#import-prompt p {
+  margin: 3px 0;
+}
+
+#import-prompt button {
+  margin: 3px 7px;
+  padding: 3px 7px;
+  border: 1px solid rgba(175, 47, 47, 0.1);
+  border-radius: 3px;
+}
+
+#import-prompt button:hover {
+  border-color: rgba(175, 47, 47, 0.2);
+}
+
 .new-todo,
 .edit {
     position: relative;
@@ -214,11 +235,11 @@ label[for='toggle-all'] {
 }
 
 .todo-list li .toggle:after {
-    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#ededed" stroke-width="3"/></svg>');
+    content: url(checkbox.svg);
 }
 
 .todo-list li .toggle:checked:after {
-    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#bddad5" stroke-width="3"/><path fill="#5dc2af" d="M72 25L42 71 27 56l-4 4 20 20 34-52z"/></svg>');
+    content: url(checked.svg);
 }
 
 .todo-list li label {
