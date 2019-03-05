@@ -32,6 +32,7 @@ plugins:
 # to override the default setting.
 exclude:
   - todo-app/
+  - lap-counter-repo/
   - Gemfile
   - Gemfile.lock
   - node_modules

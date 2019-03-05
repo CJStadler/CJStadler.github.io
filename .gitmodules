@@ -1,3 +1,6 @@
 [submodule "todo-app"]
 	path = todo-app
 	url = https://github.com/CJStadler/todo.git
+[submodule "lap-counter-repo"]
+	path = lap-counter-repo
+	url = https://github.com/CJStadler/lap-counter.git
