@@ -4,3 +4,6 @@
 [submodule "lap-counter-repo"]
 	path = lap-counter-repo
 	url = https://github.com/CJStadler/lap-counter.git
+[submodule "hn-repo"]
+	path = hn-repo
+	url = https://github.com/CJStadler/hn_sentiment

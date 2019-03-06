@@ -33,6 +33,7 @@ plugins:
 exclude:
   - todo-app/
   - lap-counter-repo/
+  - hn-repo/
   - Gemfile
   - Gemfile.lock
   - node_modules
