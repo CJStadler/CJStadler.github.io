@@ -128,9 +128,9 @@ Online textbook: [http://pages.cs.wisc.edu/~remzi/OSTEP/](http://pages.cs.wisc.e
   ```
   Γ ⊢ A : Number   Γ ⊢ B : Number
   ———————————————————————————————
-       Γ ⊢ {+ A B} : Number
+       Γ ⊢ (A + B) : Number
   ```
-  This means that `{+ A B}` has type `Number` in environment `Γ` if `A` and
+  This means that `(A + B)` has type `Number` in environment `Γ` if `A` and
   `B` both have type `Number` in that environment.
 - A continuation represents the state of a process.
 
