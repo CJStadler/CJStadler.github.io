@@ -9,7 +9,7 @@ having two conflicting thoughts:
 
 1. I can't remember anything I learned. Did I just waste two years and a bunch
    of money?
-2. I knew so much less before starting the Masters than I do now.
+2. I knew so much less before going back to school than I do now.
 
 To help resolve this I made a list of what I have learned over the last two
 years — things that were interesting, seemed important, or just stuck with me
