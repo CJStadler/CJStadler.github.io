@@ -191,4 +191,37 @@ println!("{}", std::mem::size_of::<!>());
 
 ### Product types in general
 
-We saw with `(bool, u8)`
+We calculated the number of bits we need for `(bool, u8)`, but what about for
+product types in general? I.e., can we say how many bits are necessary for a
+product type with `m` fields?
+
+```
+(T0, ..., Tm) -> T0 * ... * Tm
+          2^N >= T0 * ... * Tm
+            N >= lg(T0 * ... * Tm)
+            N >= lg(T0 * ... * Tm)
+            N >= lg(T0) + ... + lg(Tm)
+```
+
+That makes sense, the total number of bits is equal to the sum of the bits
+needed for each field.
+
+Wait a second, that's not quite right! For example, if `T0` has only 3 values
+then by itself it requires 2 bits, but `lg(T0)` is less than 2. This means that
+we could potentially need fewer bits for the product type than the sum of the
+bits of the individual types. Can we find such a type?
+
+We need a `T` for which `lg(T)` is not an integer. Let's go back to our
+`Option<bool>` (I'm going to name this `OptBool` for short), which only has 3
+values but requires 2 bits by itself. We would therefore expect a 3-tuple of
+`Option<bool>` to take 6 bits. Let's check:
+
+```
+(OptBool, OptBool, OptBool) -> 3 * 3 * 3 = 9
+                        2^N >= 9
+                          N >= lg(9)
+                          N >= 4.755
+                          N  = 5
+```
+
+Woah!
