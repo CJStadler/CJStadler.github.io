@@ -2,7 +2,6 @@
 layout: post
 title: Refactoring Algebraic Data Types into Bits
 date: 2021-03-13 08:00:00 -0400
-published: false
 ---
 
 I just read [an excellent blog post][jp] by my co-worker Justin Pombrio
@@ -88,22 +87,34 @@ lg(2^N) ≥ lg(T)
 So for any type `T` we can take the log (base 2) of the number of possible
 values of `T` to find out how many bits we need for an equivalent representation.
 
-Let's try this for some concrete types:
+### Concrete examples
+
+Let's try this for some concrete types. First, some simple ones:
 ```
 bool -> 2
       2^N ≥ 2
         N ≥ lg(2)
         N = 1
 ```
-1 bit for a `bool`, that makes sense! Let's try a product type:
+1 bit for a `bool`, that makes sense! How about a product type?
+
 ```
 (bool, u8) -> 2 * (2^8) = 512
                     2^N ≥ 512
                       N ≥ lg(512)
                       N = 9
 ```
-This is pretty clear: 1 bit for the `bool` plus 8 for the `u8` equals 9 bits.
-Now a sum type:
+This is what I would expect: 1 bit for the `bool` plus 8 for the `u8` equals 9
+bits.
+
+#### `Option<T>`
+
+Sum types are more complicated. Let's start with `Option<T>`. How do we expect
+this to be represented in memory? The simplest thing would seem to be to use 1
+bit as a flag for whether the option is `None` or `Some`, plus the bits for `T`
+itself.
+
+For example, I would expect `Option<bool>` to require two bits. Let's check:
 
 ```
 Option<bool> -> 1 + 2 = 3
@@ -111,8 +122,9 @@ Option<bool> -> 1 + 2 = 3
                     N ≥ lg(3)
                     N = 2
 ```
-Even though there are only 3 possible values we need two bits. Let's try
-something more complicated:
+
+That looks good. How about if we wrap it in another `Option`? By my logic above
+this will take 3 bits: 1 for each layer of `Option`, and 1 for the `bool`.
 
 ```
 Option<Option<bool>> -> 1 + (1 + 2) = 4
@@ -120,14 +132,16 @@ Option<Option<bool>> -> 1 + (1 + 2) = 4
                                   N ≥ lg(4)
                                   N = 2
 ```
+
 Wait, how can this `Option<Option<bool>>` take the same space as
 `Option<bool>`? There's an extra `Option` in there!
 
-Since there are only 3 possible values of `Option<bool>` but it requires 2 bits,
-one of the possible values of those bits was not being used. Since
-`Option<Option<bool>>` only has one new value, we can assign it to that bit
-value. We can write out a set of possible representations to prove that only two
-bits are necessary:
+You may have noticed that there were only 3 possible values of `Option<bool>`
+but we had to round `lg(3)` up to 2 bits. This means that one of the possible
+values of those bits was not being used. Since `Option<Option<bool>>` only has
+one new value, we can assign it to that bit value. To prove this beyond a doubt
+let's write out possible bit representation for each `Option<Option<bool>>`.
+
 ```
              None -> 00
        Some(None) -> 01
@@ -135,18 +149,46 @@ Some(Some(false)) -> 10
  Some(Some(true)) -> 11
 ```
 
+The Rust compiler is enough to take advantage of this in practice, instead of
+using the naive representation I described above. The `Option` [docs][opt]
+describe how `Option<T>` has the same size `T`, for certain `T`.
+
+[opt]: https://doc.rust-lang.org/std/option/#representation
+
+#### The unit type
+
 ```
 () -> 1
       2^N ≥ 1
         N ≥ lg(1)
         N = 0
 ```
-0 bits??? I was actually surprised by this, but as Justin pointed out it is
-correct in Rust:
+0 bits??? Even though I knew that Rust stores `()` in 0 bits I was still
+surprised that the math worked out. Good job math!
 
 ```rust
 println!("{}", std::mem::size_of::<()>());
 // prints 0
 ```
 
+#### The empty type
 
+```
+! -> 0
+     2^N ≥ 0
+       N ≥ lg(0)
+       N = -∞
+```
+
+I'm not sure how to interpret this. I guess it is fewer bits than we need for `()`.
+Don't even _think_ about representing `!`! Unfortunately Rust doesn't do
+anything weird here:
+
+```rust
+println!("{}", std::mem::size_of::<!>());
+// prints 0
+```
+
+### Product types in general
+
+We saw with `(bool, u8)`
