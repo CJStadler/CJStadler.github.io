@@ -213,15 +213,46 @@ bits of the individual types. Can we find such a type?
 
 We need a `T` for which `lg(T)` is not an integer. Let's go back to our
 `Option<bool>` (I'm going to name this `OptBool` for short), which only has 3
-values but requires 2 bits by itself. We would therefore expect a 3-tuple of
-`Option<bool>` to take 6 bits. Let's check:
+values but requires 2 bits by itself. We would therefore naively expect a
+3-tuple of `Option<bool>` to take 6 bits. Let's check:
 
 ```
-(OptBool, OptBool, OptBool) -> 3 * 3 * 3 = 9
-                        2^N >= 9
-                          N >= lg(9)
+(OptBool, OptBool, OptBool) -> 3 * 3 * 3 = 27
+                        2^N >= 27
+                          N >= lg(27)
                           N >= 4.755
                           N  = 5
 ```
 
-Woah!
+Woah! This was genuinely surprising to me. A product type is made up of several
+distinct types, but this suggests that by thinking about the representation
+_holistically_ you can use fewer bits.
+
+This doesn't seem very practical though because it makes accessing individual
+elements more complicated. The bits representing an individual element may not
+exist within the bits of the product type. And mutating one element might change
+the whole representation.
+
+### Sum types in general
+
+Here's a generic sum type with `m` variants:
+
+```rust
+enum Sum<T0, ..., Tm> {
+  T0Variant(T0),
+  ...,
+  TmVariant(Tm),
+}
+```
+
+How do we expect this to be represented in memory? I would think you need
+`lg(m)` bits as a "tag", plus however many bits are needed for the largest
+variant: `lg(m) + lg(max(T0, ..., Tm))`. Can we derive this, or find a smaller
+representation?
+
+```
+Sum<T0, ..., Tm> -> T0 + ... + Tm
+             2^N >= T0 + ... + Tm
+               N >= lg(T0 + ... + Tm)
+```
+
