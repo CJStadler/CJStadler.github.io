@@ -267,11 +267,24 @@ then, since MaxT ≥ Ti for all Ti:
   N ≥ lg(m) + lg(MaxT)
 ```
 
-### Vec<T>
+### Appendix: `Vec<A>`
 
 Justin [proves][vec] that a `Vec<A>` has `1 / (1 - A)` possible values. This is
 a _bit_ odd because we know that `Vec<A>` should have infinite possible values,
 and yet applying that formula to `Vec<bool>`, for example, gives -1[^neg].
 
+How many bits do you need to represent -1 values?
+
+```
+Vec<bool> -> -1
+       2^N ≥ -1
+         N ≥ lg(-1)
+         N ≥ (i π)/log(2)
+```
+
+Seems reasonable...
+
 [vec]: https://justinpombrio.net/2021/03/11/algebra-and-data-types.html#lists
-[^neg]: The result will clearly be negative for any `A` > 1. But for `Vec<!>` we get `1 / (1 - 0) = 1`. That actually makes sense because the only possible value is the empty vec. For `Vec<Vec<bool>>` we get `1 / (1 - (-1)) = 1/2`, which doesn't make any sense to me, on the other hand.
+[^neg]: The result will clearly be negative for any `A` > 1. But for `Vec<!>` we
+    get `1 / (1 - 0) = 1`. That actually makes sense because the only possible
+    value is the empty vec!
