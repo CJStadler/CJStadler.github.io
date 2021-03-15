@@ -92,9 +92,9 @@ values of `T` to find out how many bits we need for an equivalent representation
 Let's try this for some concrete types. First, some simple ones:
 ```
 bool -> 2
-      2^N ≥ 2
-        N ≥ lg(2)
-        N = 1
+  2^N ≥ 2
+    N ≥ lg(2)
+    N = 1
 ```
 1 bit for a `bool`, that makes sense! How about a product type?
 
@@ -159,9 +159,9 @@ describe how `Option<T>` has the same size `T`, for certain `T`.
 
 ```
 () -> 1
-      2^N ≥ 1
-        N ≥ lg(1)
-        N = 0
+2^N ≥ 1
+  N ≥ lg(1)
+  N = 0
 ```
 0 bits??? Even though I knew that Rust stores `()` in 0 bits I was still
 surprised that the math worked out. Good job math!
@@ -174,10 +174,10 @@ println!("{}", std::mem::size_of::<()>());
 #### The empty type
 
 ```
-! -> 0
-     2^N ≥ 0
-       N ≥ lg(0)
-       N = -∞
+ ! -> 0
+2^N ≥ 0
+  N ≥ lg(0)
+  N = -∞
 ```
 
 I'm not sure how to interpret this. I guess it is fewer bits than we need for `()`.
@@ -196,18 +196,18 @@ product types in general? I.e., can we say how many bits are necessary for a
 product type with `m` fields?
 
 ```
-(T0, ..., Tm) -> T0 * ... * Tm
-          2^N >= T0 * ... * Tm
-            N >= lg(T0 * ... * Tm)
-            N >= lg(T0 * ... * Tm)
-            N >= lg(T0) + ... + lg(Tm)
+(T1, ..., Tm) -> T1 * ... * Tm
+           2^N ≥ T1 * ... * Tm
+             N ≥ lg(T1 * ... * Tm)
+             N ≥ lg(T1 * ... * Tm)
+             N ≥ lg(T1) + ... + lg(Tm)
 ```
 
 That makes sense, the total number of bits is equal to the sum of the bits
 needed for each field.
 
-Wait a second, that's not quite right! For example, if `T0` has only 3 values
-then by itself it requires 2 bits, but `lg(T0)` is less than 2. This means that
+Wait a second, that's not quite right! For example, if `T1` has only 3 values
+then by itself it requires 2 bits, but `lg(T1)` is less than 2. This means that
 we could potentially need fewer bits for the product type than the sum of the
 bits of the individual types. Can we find such a type?
 
@@ -218,10 +218,10 @@ values but requires 2 bits by itself. We would therefore naively expect a
 
 ```
 (OptBool, OptBool, OptBool) -> 3 * 3 * 3 = 27
-                        2^N >= 27
-                          N >= lg(27)
-                          N >= 4.755
-                          N  = 5
+                         2^N ≥ 27
+                           N ≥ lg(27)
+                           N ≥ 4.755
+                           N = 5
 ```
 
 Woah! This was genuinely surprising to me. A product type is made up of several
@@ -238,8 +238,8 @@ the whole representation.
 Here's a generic sum type with `m` variants:
 
 ```rust
-enum Sum<T0, ..., Tm> {
-  T0Variant(T0),
+enum Sum<T1, ..., Tm> {
+  T1Variant(T1),
   ...,
   TmVariant(Tm),
 }
@@ -247,12 +247,31 @@ enum Sum<T0, ..., Tm> {
 
 How do we expect this to be represented in memory? I would think you need
 `lg(m)` bits as a "tag", plus however many bits are needed for the largest
-variant: `lg(m) + lg(max(T0, ..., Tm))`. Can we derive this, or find a smaller
-representation?
+variant: `lg(m) + lg(max(T1, ..., Tm))`. Can we find a smaller representation?
 
 ```
-Sum<T0, ..., Tm> -> T0 + ... + Tm
-             2^N >= T0 + ... + Tm
-               N >= lg(T0 + ... + Tm)
+Sum<T1, ..., Tm> -> T1 + ... + Tm
+              2^N ≥ T1 + ... + Tm
+                N ≥ lg(T1 + ... + Tm)
 ```
 
+Hmm I don't think there's anything we can do to simplify this (although my math
+is very ~rusty~). We can derive `lg(m) + lg(max(T1, ... Tm))` though:
+
+```
+define MaxT = max(T1, ..., Tm)
+then, since MaxT ≥ Ti for all Ti:
+  N ≥ lg(MaxT + ... + MaxT)
+    = lg(m * MaxT)
+    = lg(m) + lg(MaxT)
+  N ≥ lg(m) + lg(MaxT)
+```
+
+### Vec<T>
+
+Justin [proves][vec] that a `Vec<A>` has `1 / (1 - A)` possible values. This is
+a _bit_ odd because we know that `Vec<A>` should have infinite possible values,
+and yet applying that formula to `Vec<bool>`, for example, gives -1[^neg].
+
+[vec]: https://justinpombrio.net/2021/03/11/algebra-and-data-types.html#lists
+[^neg]: The result will clearly be negative for any `A` > 1. But for `Vec<!>` we get `1 / (1 - 0) = 1`. That actually makes sense because the only possible value is the empty vec. For `Vec<Vec<bool>>` we get `1 / (1 - (-1)) = 1/2`, which doesn't make any sense to me, on the other hand.
