@@ -1,39 +1,44 @@
 ---
 layout: post
-title: Refactoring Algebraic Data Types into Bits
-date: 2021-03-13 08:00:00 -0400
+title: 3 * 2 bits = 5 bits
+date: 2021-03-21 08:00:00 -0400
 ---
 
-I just read [an excellent blog post][jp] by my co-worker Justin Pombrio
-describing how algebraic data types can be refactored using the laws of algebra.
-This was super interesting and I was continuously :mind-blown:. It also made me
-think about another application: calculating the size of these data types.
+My co-worker Justin recently wrote [a great blog post][jp] describing how
+algebraic data types can be refactored using the laws of algebra. This was super
+interesting and I was continuously __:mind-blown:__. It also gave me an idea: if we
+represent bits as an algebraic data type can we "refactor" any type into bits?
+This would basically tell us how much space the type requires in memory.
+Obviously this is a kind of roundabout way to figure that out, but I found it
+to be an interesting exercise.
 
-I will provide some summary of Justin's post, but I highly recommend reading it
-and I'm going to assume that you are at least familiar with algebraic data
-types.
+Before getting to that I will provide some summary of Justin's post, but I'm
+going to assume that you are at least familiar with algebraic data types (Justin
+gives a [great explanation][adts]).
 
 [jp]: https://justinpombrio.net/2021/03/11/algebra-and-data-types.html
+[adts]: https://justinpombrio.net/2021/03/11/algebra-and-data-types.html#algebraic-data-types
 
 ## Refactoring with Algebra
 
 The core idea is to establish a mapping between types and algebraic expressions.
 We can then translate any type into an expression, apply the laws of algebra to
-find an equivalent expression, and then translate that expression into a new
-type. Since the expressions are equivalent, the types are also equivalent, and
-so the new type is a valid refactoring.
+find an _equivalent_ expression, and then translate that expression into a new
+type. Since the expressions are equivalent, the types are also equivalent.
 
-Wait a second, what does "equivalence" of types mean here? That depends on how
-we map between types and expressions.
+What does "equivalence" of types mean here? That depends on how we map between
+types and expressions.
 
-The the specific mapping for algebraic data types is to represent each type as
-an expression for the number of possible values of the type. For example, a
-"product" type like `(A, B)` has `A * B` possible values. By the law of
-commutivity we know
+For algebraic data types we map each type to an algebraic expression for the
+number of possible values of the type. For example, a "product" type like `(A,
+B)` has `A * B` possible values. By the commutative property we know
+
 ```
 A * B = B * A
 ```
+
 and so
+
 ```
 (A, B) = (B, A)
 ```
@@ -41,16 +46,20 @@ and so
 These types are equivalent in the sense that they have the same number of
 possible values. This "number of possible values" seems like some kind of
 representation of information. Hmm, isn't the standard unit of information
-the bit?...
+[the bit][bit]? How can we relate this metric to bits?
+
+[bit]: https://en.wikipedia.org/wiki/Bit
 
 ## Bits as an algebraic data type
 
 Now we know how to refactor types using algebra. One "refactoring" we might want
 to do for any type is to represent it using bits. This is pretty important
-because on digital computers every type needs to be representable as bits, and
-ideally we would do so using the fewest number of bits possible.
+since we use digital computers where everything is represented as bits, and
+ideally we would like to use as few bits as possible.
 
-How can we represent bits as an algebraic data type? In Rust:
+The first step is to write an algebraic data type for bits. In Rust we could
+write:
+
 ```rust
 // This could be boolean, but for semantics...
 enum Bit {
@@ -62,10 +71,12 @@ enum Bit {
 type Bits<const N: usize> = [Bit; N];
 ```
 
-Using Justin's derivations we can write the algebraic expressions for these types:
+Then, using Justin's derivations, we can write the algebraic expressions for
+these types:
+
 ```
-Bit     -> 1 + 1 = 2
-Bits<N> -> Bit^N = 2^N
+Bit -> 1 + 1 = 2
+Bits<N> = [Bit; N] -> Bit^N = 2^N
 ```
 
 So with `N` bits we can represent `2^N` values! Surprise!
@@ -74,7 +85,7 @@ So with `N` bits we can represent `2^N` values! Surprise!
 
 Since we have an algebraic expression for `Bits<N>`, we now know that refactor a
 type `T` into an equivalent `Bits<N>` representation we need to transform its
-expression into the form `2^N`. And since bits don't come in fractions we won't
+expression into the form `2^N`. Since bits don't come in fractions we won't
 always be able to find an exact representation (hence the `≥` instead of `=`
 below). Generally:
 
@@ -87,9 +98,13 @@ lg(2^N) ≥ lg(T)
 So for any type `T` we can take the log (base 2) of the number of possible
 values of `T` to find out how many bits we need for an equivalent representation.
 
+Again, "equivalence" here just refers to the amount of information, so process
+won't tell us anything about _how_ to represent types using these bits.
+
 ### Concrete examples
 
-Let's try this for some concrete types. First, some simple ones:
+Let's try this for some concrete types.
+
 ```
 bool -> 2
   2^N ≥ 2
@@ -107,12 +122,46 @@ bool -> 2
 This is what I would expect: 1 bit for the `bool` plus 8 for the `u8` equals 9
 bits.
 
+#### The unit type
+
+```
+() -> 1
+2^N ≥ 1
+  N ≥ lg(1)
+  N = 0
+```
+0 bits??? Even though I knew that Rust stores `()` in 0 bits I was still
+surprised that the math worked out. Good job math!
+
+```rust
+println!("{}", std::mem::size_of::<()>());
+// prints 0
+```
+
+#### The empty type
+
+```
+ ! -> 0
+2^N ≥ 0
+  N ≥ lg(0)
+  N = -∞
+```
+
+I'm not sure how to interpret this. I guess it is fewer bits than we need for
+`()` — Don't even _think_ about representing `!`! Unfortunately Rust doesn't do
+anything interesting here:
+
+```rust
+println!("{}", std::mem::size_of::<!>());
+// prints 0
+```
+
 #### `Option<T>`
 
-Sum types are more complicated. Let's start with `Option<T>`. How do we expect
-this to be represented in memory? The simplest thing would seem to be to use 1
-bit as a flag for whether the option is `None` or `Some`, plus the bits for `T`
-itself.
+Sum types seem a bit more complicated. Let's start with `Option<T>`. How do we
+expect this to be represented in memory? The simplest thing would seem to be to
+use 1 bit as a flag for whether the option is `None` or `Some`, plus the bits
+for `T` itself.
 
 For example, I would expect `Option<bool>` to require two bits. Let's check:
 
@@ -155,39 +204,46 @@ describe how `Option<T>` has the same size `T`, for certain `T`.
 
 [opt]: https://doc.rust-lang.org/std/option/#representation
 
-#### The unit type
+### Sum types in general
 
-```
-() -> 1
-2^N ≥ 1
-  N ≥ lg(1)
-  N = 0
-```
-0 bits??? Even though I knew that Rust stores `()` in 0 bits I was still
-surprised that the math worked out. Good job math!
+Here's a generic sum type with `m` variants:
 
 ```rust
-println!("{}", std::mem::size_of::<()>());
-// prints 0
+enum Sum<T1, ..., Tm> {
+  T1Variant(T1),
+  ...,
+  TmVariant(Tm),
+}
 ```
 
-#### The empty type
+If a variant contains no type (like `None`) we can pretend that it actually
+contains the unit type (e.g. `None(())`).
+
+How do we expect this to be represented in memory? I would think you need
+`lg(m)` bits as a "tag", plus however many bits are needed for the largest
+variant: `lg(m) + lg(max(T1, ..., Tm))`. Can we find a smaller representation?
 
 ```
- ! -> 0
-2^N ≥ 0
-  N ≥ lg(0)
-  N = -∞
+Sum<T1, ..., Tm> -> T1 + ... + Tm
+              2^N ≥ T1 + ... + Tm
+                N ≥ lg(T1 + ... + Tm)
 ```
 
-I'm not sure how to interpret this. I guess it is fewer bits than we need for `()`.
-Don't even _think_ about representing `!`! Unfortunately Rust doesn't do
-anything weird here:
+Hmm I don't think there's anything we can do to simplify this (although my math
+is very ~rusty~). We can at least prove that `lg(m) + lg(max(T1, ... Tm))` is
+valid though:
 
-```rust
-println!("{}", std::mem::size_of::<!>());
-// prints 0
 ```
+define MaxT = max(T1, ..., Tm)
+then, since MaxT ≥ Ti for all Ti:
+  N ≥ lg(MaxT + ... + MaxT)
+    = lg(m * MaxT)
+    = lg(m) + lg(MaxT)
+  N ≥ lg(m) + lg(MaxT)
+```
+
+Applying this to our `Option<Option<bool>>` we get `lg(2) + lg(3)` which rounds
+up to 3 bits. So unfortunately we didn't find the 2 bit representation this way.
 
 ### Product types in general
 
@@ -206,74 +262,56 @@ product type with `m` fields?
 That makes sense, the total number of bits is equal to the sum of the bits
 needed for each field.
 
-Wait a second, that's not quite right! For example, if `T1` has only 3 values
-then by itself it requires 2 bits, but `lg(T1)` is less than 2. This means that
-we could potentially need fewer bits for the product type than the sum of the
-bits of the individual types. Can we find such a type?
+Wait a second, that's not exactly what the equation says! For example, if `T1`
+has only 3 values then by itself it requires 2 bits, but `lg(T1)` is less 
+than 2. This means that we could potentially need fewer bits for the product
+type than the sum of the bits of the individual types! Can we find such a type?
 
 We need a `T` for which `lg(T)` is not an integer. Let's go back to our
-`Option<bool>` (I'm going to name this `OptBool` for short), which only has 3
-values but requires 2 bits by itself. We would therefore naively expect a
-3-tuple of `Option<bool>` to take 6 bits. Let's check:
+`Option<bool>`, which only has 3 values but requires 2 bits by itself. We would
+therefore naively expect a 3-tuple of `Option<bool>` to take 6 bits. Let's
+check:
 
 ```
-(OptBool, OptBool, OptBool) -> 3 * 3 * 3 = 27
-                         2^N ≥ 27
-                           N ≥ lg(27)
-                           N ≥ 4.755
-                           N = 5
+(Option<bool>, Option<bool>, Option<bool>)
+->
+3 * 3 * 3 = 27
+      2^N ≥ 27
+        N ≥ lg(27)
+        N ≥ 4.755
+        N = 5
 ```
 
-Woah! This was genuinely surprising to me. A product type is made up of several
-distinct types, but this suggests that by thinking about the representation
-_holistically_ you can use fewer bits.
+Woah only 5 bits! This was genuinely surprising to me. A product type is made up
+of several distinct types, but this suggests that by thinking about the
+representation _holistically_ you can use fewer bits.
 
-This doesn't seem very practical though because it makes accessing individual
-elements more complicated. The bits representing an individual element may not
-exist within the bits of the product type. And mutating one element might change
-the whole representation.
+Of course, this doesn't seem very practical though because it makes accessing
+individual elements more complicated. The bits representing an individual
+element may not exist within the bits of the product type. And mutating one
+element might requiring changing the whole representation. Maybe it could be
+useful for storage, but I'm not sure it will play nicely with compression
+algorithms.
 
-### Sum types in general
+## Conclusion
 
-Here's a generic sum type with `m` variants:
-
-```rust
-enum Sum<T1, ..., Tm> {
-  T1Variant(T1),
-  ...,
-  TmVariant(Tm),
-}
-```
-
-How do we expect this to be represented in memory? I would think you need
-`lg(m)` bits as a "tag", plus however many bits are needed for the largest
-variant: `lg(m) + lg(max(T1, ..., Tm))`. Can we find a smaller representation?
-
-```
-Sum<T1, ..., Tm> -> T1 + ... + Tm
-              2^N ≥ T1 + ... + Tm
-                N ≥ lg(T1 + ... + Tm)
-```
-
-Hmm I don't think there's anything we can do to simplify this (although my math
-is very ~rusty~). We can derive `lg(m) + lg(max(T1, ... Tm))` though:
-
-```
-define MaxT = max(T1, ..., Tm)
-then, since MaxT ≥ Ti for all Ti:
-  N ≥ lg(MaxT + ... + MaxT)
-    = lg(m * MaxT)
-    = lg(m) + lg(MaxT)
-  N ≥ lg(m) + lg(MaxT)
-```
+I don't think we discovered anything very practical, but I found this linkage
+between bits and abstract data types interesting. Bits and representing data
+structures in memory seems like it belongs on the "applied" side of CS, while
+algebraic data types are on the "theory" side, but this reminded me of how they
+are deeply related.
 
 ### Appendix: `Vec<A>`
 
 Justin [proves][vec] that a `Vec<A>` has `1 / (1 - A)` possible values. This is
-a _bit_ odd because we know that `Vec<A>` should have infinite possible values,
-and yet applying that formula to `Vec<bool>`, for example, gives -1[^neg].
+a _bit_ odd because it seems like `Vec<A>` should have infinite possible values,
+and yet applying that formula to `Vec<bool>`, for example, gives -1.
 
-How many bits do you need to represent -1 values?
+The result will clearly be negative for any `A` > 1. But for `Vec<!>` we get `1
+/ (1 - 0) = 1`. That actually makes sense because the only possible value is the
+empty vec!
+
+Going back to `Vec<bool>`, how many bits do you need to represent -1 values?
 
 ```
 Vec<bool> -> -1
@@ -282,9 +320,8 @@ Vec<bool> -> -1
          N ≥ (i π)/log(2)
 ```
 
-Seems reasonable...
+Makes sense to me...
 
 [vec]: https://justinpombrio.net/2021/03/11/algebra-and-data-types.html#lists
-[^neg]: The result will clearly be negative for any `A` > 1. But for `Vec<!>` we
-    get `1 / (1 - 0) = 1`. That actually makes sense because the only possible
-    value is the empty vec!
+
+[^neg]: 
