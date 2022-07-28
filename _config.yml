@@ -16,9 +16,9 @@
 title: Chris Stadler
 email: chrisstadler@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Blogging about software development and related things.
+  Writings about software development and related things.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://cjstadler.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://www.cjstadler.com/" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: CJStadler
 
 # Build settings
