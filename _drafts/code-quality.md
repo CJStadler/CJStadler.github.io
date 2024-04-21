@@ -29,13 +29,14 @@ Below are a bunch of frequently discussed concepts related to code quality. Can 
 - DRY
 - Naming
   - Short
-  - Descriptive of behavior
+  - Descriptive of behavior, not of when or what calls it ("after_foo")
 - Extensibility
 - Specificity (referencing by name instead of index)
 - Abstraction
 - Single responsibility principle (cohesion?)
 - Reusability
 - Cyclomatic complexity
-- Avoid going from high information data (parsed) to low (serialized) and back. Reduces possibility of errors and duplication of code. In the other direction, don't parse something unnecessarily.
+- Avoid going from high information/structure data (parsed) to low (serialized) and back. Reduces possibility of errors and duplication of code. In the other direction, don't parse something unnecessarily.
+  - Parse/deserialize and validate at input edges, maintain high structure within program, serialize to low structure at output edges.
 
 Does testing belong in here somewhere?
